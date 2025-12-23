@@ -1,0 +1,357 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>E-Commerce Analytics Dashboard</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/3.9.1/chart.min.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 20px;
+        }
+        
+        .container {
+            max-width: 1400px;
+            margin: 0 auto;
+            background: white;
+            border-radius: 20px;
+            padding: 30px;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 40px;
+            padding-bottom: 20px;
+            border-bottom: 3px solid #667eea;
+        }
+        
+        h1 {
+            color: #333;
+            font-size: 2.5em;
+            margin-bottom: 10px;
+        }
+        
+        .subtitle {
+            color: #666;
+            font-size: 1.1em;
+        }
+        
+        .author {
+            color: #764ba2;
+            font-weight: 600;
+            margin-top: 10px;
+        }
+        
+        .metrics-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 20px;
+            margin-bottom: 40px;
+        }
+        
+        .metric-card {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            padding: 25px;
+            border-radius: 15px;
+            color: white;
+            box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+            transition: transform 0.3s;
+        }
+        
+        .metric-card:hover {
+            transform: translateY(-5px);
+        }
+        
+        .metric-label {
+            font-size: 0.9em;
+            opacity: 0.9;
+            margin-bottom: 10px;
+        }
+        
+        .metric-value {
+            font-size: 2.2em;
+            font-weight: bold;
+        }
+        
+        .charts-section {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(500px, 1fr));
+            gap: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .chart-container {
+            background: #f8f9fa;
+            padding: 25px;
+            border-radius: 15px;
+            box-shadow: 0 3px 10px rgba(0,0,0,0.1);
+        }
+        
+        .chart-title {
+            font-size: 1.3em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+            text-align: center;
+        }
+        
+        .insights-section {
+            background: #f8f9fa;
+            padding: 30px;
+            border-radius: 15px;
+            margin-top: 30px;
+        }
+        
+        .insights-title {
+            font-size: 1.5em;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 20px;
+        }
+        
+        .insight-item {
+            background: white;
+            padding: 15px;
+            margin-bottom: 15px;
+            border-radius: 10px;
+            border-left: 4px solid #667eea;
+            box-shadow: 0 2px 5px rgba(0,0,0,0.1);
+        }
+        
+        .insight-category {
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 5px;
+        }
+        
+        .segment-badge {
+            display: inline-block;
+            padding: 5px 15px;
+            border-radius: 20px;
+            font-size: 0.9em;
+            font-weight: 600;
+            margin: 5px;
+        }
+        
+        .champions { background: #28a745; color: white; }
+        .loyal { background: #17a2b8; color: white; }
+        .at-risk { background: #ffc107; color: #333; }
+        .lost { background: #dc3545; color: white; }
+        
+        footer {
+            text-align: center;
+            margin-top: 40px;
+            padding-top: 20px;
+            border-top: 2px solid #e9ecef;
+            color: #666;
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>📊 E-Commerce Analytics Dashboard</h1>
+            <div class="subtitle">Customer Behavior & Retention Analysis</div>
+            <div class="author">By Undadi Nishank | Data Analyst</div>
+        </header>
+        
+        <div class="metrics-grid">
+            <div class="metric-card">
+                <div class="metric-label">Total Revenue</div>
+                <div class="metric-value">$4.2M</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Total Orders</div>
+                <div class="metric-value">24,587</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Unique Customers</div>
+                <div class="metric-value">5,000</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-label">Avg Order Value</div>
+                <div class="metric-value">$170.85</div>
+            </div>
+        </div>
+        
+        <div class="charts-section">
+            <div class="chart-container">
+                <div class="chart-title">Monthly Revenue Trend</div>
+                <canvas id="revenueChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">Customer Segmentation (RFM)</div>
+                <canvas id="segmentChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">Top Product Categories</div>
+                <canvas id="categoryChart"></canvas>
+            </div>
+            
+            <div class="chart-container">
+                <div class="chart-title">Customer Retention Rate</div>
+                <canvas id="retentionChart"></canvas>
+            </div>
+        </div>
+        
+        <div class="insights-section">
+            <div class="insights-title">🎯 Key Insights & Recommendations</div>
+            
+            <div class="insight-item">
+                <div class="insight-category">Customer Segments</div>
+                <span class="segment-badge champions">Champions: 15%</span>
+                <span class="segment-badge loyal">Loyal: 20%</span>
+                <span class="segment-badge at-risk">At Risk: 25%</span>
+                <span class="segment-badge lost">Lost: 18%</span>
+                <p style="margin-top: 10px;">Top 15% Champions generate 45% of total revenue. Focus retention efforts on this segment.</p>
+            </div>
+            
+            <div class="insight-item">
+                <div class="insight-category">Retention Metrics</div>
+                <p><strong>Month 1 Retention:</strong> 68% | <strong>Month 3 Retention:</strong> 42% | <strong>Month 6 Retention:</strong> 28%</p>
+                <p style="margin-top: 10px;">Significant drop-off after month 3. Implement engagement campaigns at 60-day mark.</p>
+            </div>
+            
+            <div class="insight-item">
+                <div class="insight-category">Product Performance</div>
+                <p>Electronics category leads with 38% of revenue. Top product: Laptop Model 5 ($487K revenue).</p>
+                <p style="margin-top: 10px;">Cross-sell opportunity: 65% of laptop buyers also purchase accessories within 30 days.</p>
+            </div>
+            
+            <div class="insight-item">
+                <div class="insight-category">Geographic Insights</div>
+                <p>USA and UK account for 52% of revenue. India shows highest growth rate (78% YoY).</p>
+                <p style="margin-top: 10px;">Consider localized marketing campaigns for high-growth markets.</p>
+            </div>
+            
+            <div class="insight-item">
+                <div class="insight-category">Recommendations</div>
+                <ul style="margin-left: 20px; margin-top: 10px;">
+                    <li>Launch tiered loyalty program for Champions and Loyal segments</li>
+                    <li>Create win-back email campaign for At Risk customers (25% of base)</li>
+                    <li>Implement product bundling for high-affinity items</li>
+                    <li>Optimize checkout process to improve average order value by 12%</li>
+                    <li>Target Month 3 churn with personalized retention offers</li>
+                </ul>
+            </div>
+        </div>
+        
+        <footer>
+            <p><strong>Contact:</strong> nishankundadi66@gmail.com | <strong>Phone:</strong> 7993002132 | <strong>Location:</strong> Hyderabad, Telangana</p>
+            <p style="margin-top: 10px;">GitHub: <a href="#">github.com/yourusername/ecommerce-analytics</a></p>
+        </footer>
+    </div>
+    
+    <script>
+        // Revenue Trend Chart
+        const revenueCtx = document.getElementById('revenueChart').getContext('2d');
+        new Chart(revenueCtx, {
+            type: 'line',
+            data: {
+                labels: ['Jan', 'Feb', 'Mar', 'Apr', 'May', 'Jun', 'Jul', 'Aug', 'Sep', 'Oct', 'Nov', 'Dec'],
+                datasets: [{
+                    label: 'Revenue ($K)',
+                    data: [285, 310, 328, 342, 365, 378, 390, 405, 420, 445, 485, 520],
+                    borderColor: '#667eea',
+                    backgroundColor: 'rgba(102, 126, 234, 0.1)',
+                    tension: 0.4,
+                    fill: true,
+                    pointRadius: 4,
+                    pointHoverRadius: 6
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+        
+        // Segment Distribution Chart
+        const segmentCtx = document.getElementById('segmentChart').getContext('2d');
+        new Chart(segmentCtx, {
+            type: 'doughnut',
+            data: {
+                labels: ['Champions', 'Loyal', 'At Risk', 'Lost', 'Others'],
+                datasets: [{
+                    data: [15, 20, 25, 18, 22],
+                    backgroundColor: ['#28a745', '#17a2b8', '#ffc107', '#dc3545', '#6c757d']
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { position: 'bottom' }
+                }
+            }
+        });
+        
+        // Category Performance Chart
+        const categoryCtx = document.getElementById('categoryChart').getContext('2d');
+        new Chart(categoryCtx, {
+            type: 'bar',
+            data: {
+                labels: ['Electronics', 'Clothing', 'Home', 'Sports', 'Books'],
+                datasets: [{
+                    label: 'Revenue ($K)',
+                    data: [1598, 842, 625, 487, 328],
+                    backgroundColor: '#764ba2'
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { beginAtZero: true }
+                }
+            }
+        });
+        
+        // Retention Chart
+        const retentionCtx = document.getElementById('retentionChart').getContext('2d');
+        new Chart(retentionCtx, {
+            type: 'line',
+            data: {
+                labels: ['Month 0', 'Month 1', 'Month 2', 'Month 3', 'Month 4', 'Month 5', 'Month 6'],
+                datasets: [{
+                    label: 'Retention Rate (%)',
+                    data: [100, 68, 52, 42, 35, 30, 28],
+                    borderColor: '#dc3545',
+                    backgroundColor: 'rgba(220, 53, 69, 0.1)',
+                    tension: 0.4,
+                    fill: true
+                }]
+            },
+            options: {
+                responsive: true,
+                plugins: {
+                    legend: { display: false }
+                },
+                scales: {
+                    y: { 
+                        beginAtZero: true,
+                        max: 100
+                    }
+                }
+            }
+        });
+    </script>
+</body>
+</html>
